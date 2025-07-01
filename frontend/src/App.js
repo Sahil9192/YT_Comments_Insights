@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
 
 function App() {
   const [videoId, setVideoId] = useState('');
@@ -21,6 +22,13 @@ function App() {
       setLoading(false);
     }
   };
+
+  const COLORS = ['#00C49F','#FF8042','#0088FE'];
+  const pieData = result ? [
+    {name: 'Positive', value: result.sentiment_analysis.positive},
+    {name: 'Negative', value: result.sentiment_analysis.negative},
+    {name: 'Neutral', value: result.sentiment_analysis.neutral}
+  ] : [];
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem', fontFamily: 'Arial' }}>
@@ -49,6 +57,25 @@ function App() {
           <p><strong>Positive:</strong> {result.sentiment_analysis.positive}</p>
           <p><strong>Negative:</strong> {result.sentiment_analysis.negative}</p>
           <p><strong>Neutral:</strong> {result.sentiment_analysis.neutral}</p>
+
+          <PieChart width={400} height={300}>
+            <Pie
+              data = {pieData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+              fill="#8884d8"
+              label
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
         </div>
       )}
     </div>
