@@ -1,8 +1,17 @@
 from fastapi import FastAPI
 from app.youtube_api import fetch_comments
 from app.sentiment_analysis import analyze_sentiment
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
