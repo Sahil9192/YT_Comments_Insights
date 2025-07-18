@@ -3,6 +3,7 @@ from app.youtube_api import fetch_comments
 from app.sentiment_analysis import analyze_sentiment
 from app.wordcloud_generator import generate_wordcloud
 from fastapi.middleware.cors import CORSMiddleware
+from app.toxic_detector import detect_toxicity
 
 app = FastAPI()
 
@@ -47,3 +48,11 @@ def get_wordcloud(video_id: str):
         "video_id": video_id,
         "wordcloud_image": wordcloud_base64
     }
+
+@app.get("/detect_toxic/")
+def detect_toxic(video_id: str):
+    comments = fetch_comments(video_id)
+    if not comments:
+        return {"error" : "No comments found"}
+    result = detect_toxicity(comments)
+    return result
